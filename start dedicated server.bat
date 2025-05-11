@@ -1,0 +1,1 @@
+"C:\Epic Games\UE_5.4\Engine\Binaries\Win64\UnrealEditor.exe" "D:\Projects\UE5\MPPlatformer\MPPlatformer.uproject" /Game/ThirdPerson/Maps/ThirdPersonMap.umap?listen -server -log 
