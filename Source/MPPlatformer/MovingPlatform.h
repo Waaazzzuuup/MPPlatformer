@@ -13,6 +13,15 @@ class MPPLATFORMER_API AMovingPlatform : public AStaticMeshActor
 public:
 	AMovingPlatform();
 
+	UPROPERTY(EditAnywhere)
+	float PlatformSpeedX = 5.0f;
+
+	UPROPERTY(EditAnywhere)
+	float PlatformSpeedY = 0.0f;
+
+	UPROPERTY(EditAnywhere)
+	float PlatformSpeedZ = 0.0f;
+
 protected:
 	virtual void Tick(float DeltaTime) override;
 	
