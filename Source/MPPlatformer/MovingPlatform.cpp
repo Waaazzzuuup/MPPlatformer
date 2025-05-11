@@ -1,23 +1,48 @@
 #include "MovingPlatform.h"
 
+
 AMovingPlatform::AMovingPlatform()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	SetMobility(EComponentMobility::Movable);
 }
 
+
+void AMovingPlatform::BeginPlay()
+{
+	Super::BeginPlay();
+	if (HasAuthority())
+	{
+		SetReplicates(true);
+		SetReplicateMovement(true);
+		GlobalStartLocation = GetActorLocation();
+		GlobalTargetLocation = GetTransform().TransformPosition(TargetLocation);
+		PathLength = (GlobalTargetLocation - GlobalStartLocation).Size();
+	}
+}
+
+
 void AMovingPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	bool IsServer = HasAuthority();
-	if (IsServer)
+	
+	if (HasAuthority())
 	{
 		FVector Location = GetActorLocation();
-		Location += FVector(PlatformSpeedX,PlatformSpeedY,PlatformSpeedZ) * DeltaTime;
+		
+		float PathTravelled = (GlobalStartLocation - Location).Size();
+		if (PathTravelled >= PathLength)
+		{
+			FVector tmp = GlobalStartLocation;
+			GlobalStartLocation = GlobalTargetLocation;
+			GlobalTargetLocation = tmp;
+		}
+		FVector Direction = (GlobalTargetLocation - GlobalStartLocation).GetSafeNormal();
+		Location += Direction * Speed * DeltaTime;
 		SetActorLocation(Location);
 	}
-	
 }
+
+
 
 
