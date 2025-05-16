@@ -6,7 +6,7 @@
 APlatformTrigger::APlatformTrigger()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	TriggerVolume = CreateDefaultSubobject<UBoxComponent>(FName('TriggerVolume'));
+	TriggerVolume = CreateDefaultSubobject<UBoxComponent>(FName("TriggerVolume") );
 	// new way to do early return type shit
 	if (!ensure(TriggerVolume!=nullptr)) return;
 
