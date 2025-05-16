@@ -19,10 +19,16 @@ public:
 	UPROPERTY(EditAnywhere)
 	float Speed = 10.0f;
 
+	void AddActiveTrigger();
+	void RemoveActiveTrigger();
+
 private:
 	FVector GlobalTargetLocation;
 	FVector GlobalStartLocation;
 	float PathLength;
+	UPROPERTY(EditAnywhere)
+	int ActiveTriggers = 1;
+	
 
 protected:
 	virtual void Tick(float DeltaTime) override;
