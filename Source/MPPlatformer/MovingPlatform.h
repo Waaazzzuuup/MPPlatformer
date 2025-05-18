@@ -17,7 +17,7 @@ public:
 	FVector TargetLocation;
 	
 	UPROPERTY(EditAnywhere)
-	float Speed = 10.0f;
+	float Speed = 100.0f;
 
 	void AddActiveTrigger();
 	void RemoveActiveTrigger();
