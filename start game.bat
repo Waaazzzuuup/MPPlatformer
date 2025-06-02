@@ -1,1 +1,1 @@
-"C:\Epic Games\UE_5.4\Engine\Binaries\Win64\UnrealEditor.exe" "D:\Projects\UE5\MPPlatformer\MPPlatformer.uproject" 127.0.0.1:8989 -game -log 
+"C:\Epic Games\UE_5.4\Engine\Binaries\Win64\UnrealEditor.exe" "D:\Projects\UE5\MPPlatformer\MPPlatformer.uproject" -game -log 
