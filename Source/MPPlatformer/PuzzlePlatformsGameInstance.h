@@ -12,5 +12,8 @@ class MPPLATFORMER_API UPuzzlePlatformsGameInstance : public UGameInstance
 public:
 	UPuzzlePlatformsGameInstance( const FObjectInitializer& ObjectInitializer);
 	virtual void Init() override;
+
+	UFUNCTION(Exec)
+	void Host();
 	
 };
