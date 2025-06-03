@@ -1,17 +1,27 @@
 #include "PuzzlePlatformsGameInstance.h"
 
+// probably isnt needed
+#include "UObject/ConstructorHelpers.h"
+
+#include "Blueprint/UserWidget.h"
 
 UPuzzlePlatformsGameInstance::UPuzzlePlatformsGameInstance(const FObjectInitializer& ObjectInitializer)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Called a constructor"));
+	// find a BP child of some C++ class (or any BP)
+	ConstructorHelpers::FClassFinder<UUserWidget> MenuBPClass(TEXT("/Game/MenuSystem/WBP_MainMenu"));
+	// it is some complex object, but we can extract a class to a variable
+	MenuClass = MenuBPClass.Class;
+	if (!ensure(MenuClass!=nullptr)) UE_LOG(LogTemp, Warning, TEXT("Cant find class %s"), *MenuBPClass.Class->GetName());
 }
 
 
 void UPuzzlePlatformsGameInstance::Init()
 {
 	Super::Init();
-	UE_LOG(LogTemp, Warning, TEXT("Called an INIT func"));
+	UE_LOG(LogTemp, Warning, TEXT("Found class %s"), *MenuClass->GetName());
 }
+
 
 void UPuzzlePlatformsGameInstance::Host()
 {
@@ -28,6 +38,7 @@ void UPuzzlePlatformsGameInstance::Host()
 	World->ServerTravel("/Game/ThirdPerson/Maps/ThirdPersonMap?listen");
 	
 }
+
 
 void UPuzzlePlatformsGameInstance::Join(const FString& Address)
 {

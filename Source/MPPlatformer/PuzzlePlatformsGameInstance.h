@@ -2,7 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+
+
 #include "PuzzlePlatformsGameInstance.generated.h"
+
 
 UCLASS()
 class MPPLATFORMER_API UPuzzlePlatformsGameInstance : public UGameInstance
@@ -10,6 +13,7 @@ class MPPLATFORMER_API UPuzzlePlatformsGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
+
 	UPuzzlePlatformsGameInstance( const FObjectInitializer& ObjectInitializer);
 	virtual void Init() override;
 
@@ -18,5 +22,8 @@ public:
 
 	UFUNCTION(Exec)
 	void Join(const FString& Address );
+
+private:
+	TSubclassOf<class UUserWidget> MenuClass;
 	
 };
