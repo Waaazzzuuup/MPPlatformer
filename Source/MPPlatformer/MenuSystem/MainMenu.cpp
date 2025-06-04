@@ -1,6 +1,6 @@
-#include "Components/Button.h"
-
 #include "MainMenu.h"
+
+#include "Components/Button.h"
 
 
 bool UMainMenu::Initialize()
