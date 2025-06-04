@@ -56,7 +56,7 @@ void UPuzzlePlatformsGameInstance::LoadMenu()
 {
 	if (!ensure(MenuClass!=nullptr)) return;
 	
-	UUserWidget* Menu = CreateWidget<UUserWidget>(this, MenuClass);
+	UMainMenu* Menu = CreateWidget<UMainMenu>(this, MenuClass);
 	if (!ensure(Menu!=nullptr)) return;
 
 	Menu->AddToViewport();
@@ -71,5 +71,7 @@ void UPuzzlePlatformsGameInstance::LoadMenu()
 	if (!ensure(PlayerController!=nullptr)) return;
 	PlayerController->SetInputMode(InputModeBase);
 	PlayerController->bShowMouseCursor = true;
-	
+
+	// we can hust pass the object that implements methods of an interface
+	Menu->SetMenuInterface(this);
 }

@@ -2,13 +2,14 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-
+#include "MenuSystem/MenuInterface.h"
+#include "MenuSystem/MainMenu.h"
 
 #include "PuzzlePlatformsGameInstance.generated.h"
 
-
+// gotta inherit it from an interface to use it
 UCLASS()
-class MPPLATFORMER_API UPuzzlePlatformsGameInstance : public UGameInstance
+class MPPLATFORMER_API UPuzzlePlatformsGameInstance : public UGameInstance, public IMenuInterface
 {
 	GENERATED_BODY()
 

@@ -17,12 +17,24 @@ bool UMainMenu::Initialize()
 	return true;
 }
 
+
+void UMainMenu::SetMenuInterface(IMenuInterface* MI)
+{
+	MenuInterface = MI;
+}
+
+
 void UMainMenu::BtnHostClicked()
 {
-	UE_LOG(LogTemp, Warning, TEXT("IM BOUT TO HOST IM A SERVER"))
+	UE_LOG(LogTemp, Warning, TEXT("IM BOUT TO HOST IM A SERVER"));
+
+	if(MenuInterface!=nullptr)
+	{
+		MenuInterface->Host();
+	}
 }
 
 void UMainMenu::BtnJoinClicked()
 {
-	UE_LOG(LogTemp, Warning, TEXT("IM BOUT TO JOIN IM A GAYMER"))
+	UE_LOG(LogTemp, Warning, TEXT("IM BOUT TO JOIN IM A GAYMER"));
 }
