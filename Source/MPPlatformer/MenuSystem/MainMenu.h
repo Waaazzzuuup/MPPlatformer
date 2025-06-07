@@ -44,6 +44,9 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	UWidget* StartMenu;
 
+	UPROPERTY(meta = (BindWidget))
+	class UEditableText* EditTextAddress;
+
 	// button functions 
 	UFUNCTION()
 	void BtnHostClicked();

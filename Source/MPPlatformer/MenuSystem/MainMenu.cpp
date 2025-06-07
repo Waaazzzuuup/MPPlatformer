@@ -2,6 +2,8 @@
 
 #include "Components/Button.h"
 #include "Components/WidgetSwitcher.h"
+#include "Components/EditableText.h"
+
 
 bool UMainMenu::Initialize()
 {
@@ -99,5 +101,10 @@ void UMainMenu::BtnBackClicked()
 
 void UMainMenu::BtnJoinClicked()
 {
-
+	if(!ensure(EditTextAddress!=nullptr)) return;
+	FString Address = EditTextAddress->GetText().ToString();
+	if(MenuInterface!=nullptr)
+	{
+		MenuInterface->Join(Address);
+	}
 }
