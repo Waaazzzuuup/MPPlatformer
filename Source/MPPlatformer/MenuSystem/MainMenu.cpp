@@ -71,7 +71,7 @@ void UMainMenu::Teardown()
 void UMainMenu::BtnHostClicked()
 {
 	UE_LOG(LogTemp, Warning, TEXT("IM BOUT TO HOST IM A SERVER"));
-
+	
 	if(MenuInterface!=nullptr)
 	{
 		// call out a method on the interface
@@ -84,6 +84,7 @@ void UMainMenu::BtnOpenJoinMenuClicked()
 {
 	if(!ensure(MenuSwitcher!=nullptr)) return;
 	// can do it by index, but this is safer
+	if(!ensure(JoinMenu!=nullptr)) return;
 	MenuSwitcher->SetActiveWidget(JoinMenu);
 }
 
@@ -91,7 +92,7 @@ void UMainMenu::BtnOpenJoinMenuClicked()
 void UMainMenu::BtnBackClicked()
 {
 	if(!ensure(MenuSwitcher!=nullptr)) return;
-	// can do it by index, but this is safer
+	if(!ensure(StartMenu!=nullptr)) return;
 	MenuSwitcher->SetActiveWidget(StartMenu);
 }
 
