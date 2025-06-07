@@ -21,18 +21,42 @@ protected:
 	virtual bool Initialize() override;
 
 private:
+	// buttons
 	UPROPERTY(meta = (BindWidget))
 	class UButton* BtnHost;
 
 	UPROPERTY(meta = (BindWidget))
-	class UButton* BtnJoin;
+	UButton* BtnOpenJoinMenu;
 
+	UPROPERTY(meta = (BindWidget))
+	UButton* BtnBack;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* BtnJoin;
+
+	// switcher and menu widgets
+	UPROPERTY(meta = (BindWidget))
+	class UWidgetSwitcher* MenuSwitcher;
+
+	UPROPERTY(meta = (BindWidget))
+	UWidget* JoinMenu;
+
+	UPROPERTY(meta = (BindWidget))
+	UWidget* StartMenu;
+
+	// button functions 
 	UFUNCTION()
 	void BtnHostClicked();
 
 	UFUNCTION()
+	void BtnOpenJoinMenuClicked();
+
+	UFUNCTION()
+	void BtnBackClicked();
+
+	UFUNCTION()
 	void BtnJoinClicked();
+	
 	// so menu class has an interface
 	IMenuInterface* MenuInterface;
-	
 };

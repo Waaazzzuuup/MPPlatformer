@@ -1,7 +1,7 @@
 #include "MainMenu.h"
 
 #include "Components/Button.h"
-
+#include "Components/WidgetSwitcher.h"
 
 bool UMainMenu::Initialize()
 {
@@ -11,6 +11,12 @@ bool UMainMenu::Initialize()
 	if(!ensure(BtnHost!=nullptr)) return false;
 	BtnHost->OnClicked.AddDynamic(this, &UMainMenu::BtnHostClicked);
 
+	if(!ensure(BtnOpenJoinMenu!=nullptr)) return false;
+	BtnOpenJoinMenu->OnClicked.AddDynamic(this, &UMainMenu::BtnOpenJoinMenuClicked);
+
+	if(!ensure(BtnBack!=nullptr)) return false;
+	BtnBack->OnClicked.AddDynamic(this, &UMainMenu::BtnBackClicked);
+	
 	if(!ensure(BtnJoin!=nullptr)) return false;
 	BtnJoin->OnClicked.AddDynamic(this, &UMainMenu::BtnJoinClicked);
 	
@@ -46,7 +52,7 @@ void UMainMenu::Setup()
 
 void UMainMenu::Teardown()
 {
-	UE_LOG(LogTemp, Warning, TEXT("TEARDOWN"));
+	UE_LOG(LogTemp, Warning, TEXT("TEARDOWN CALLED"));
 	
 	FInputModeGameOnly InputModeBase;
 
@@ -74,7 +80,23 @@ void UMainMenu::BtnHostClicked()
 	}
 }
 
+void UMainMenu::BtnOpenJoinMenuClicked() 
+{
+	if(!ensure(MenuSwitcher!=nullptr)) return;
+	// can do it by index, but this is safer
+	MenuSwitcher->SetActiveWidget(JoinMenu);
+}
+
+
+void UMainMenu::BtnBackClicked()
+{
+	if(!ensure(MenuSwitcher!=nullptr)) return;
+	// can do it by index, but this is safer
+	MenuSwitcher->SetActiveWidget(StartMenu);
+}
+
+
 void UMainMenu::BtnJoinClicked()
 {
-	UE_LOG(LogTemp, Warning, TEXT("IM BOUT TO JOIN IM A GAYMER"));
+
 }
