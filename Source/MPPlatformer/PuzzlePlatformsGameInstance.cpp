@@ -23,7 +23,7 @@ void UPuzzlePlatformsGameInstance::Init()
 }
 
 
-void UPuzzlePlatformsGameInstance::Host()
+void UPuzzlePlatformsGameInstance::Host() override
 {
 	UEngine* Engine = GetEngine();
 	if (!ensure(Engine!=nullptr)) return;
@@ -72,6 +72,7 @@ void UPuzzlePlatformsGameInstance::LoadMenu()
 	PlayerController->SetInputMode(InputModeBase);
 	PlayerController->bShowMouseCursor = true;
 
-	// we can hust pass the object that implements methods of an interface
+	// we can just pass the object that implements methods of an interface
+	// don't need an actual interface class - that's the point 
 	Menu->SetMenuInterface(this);
 }

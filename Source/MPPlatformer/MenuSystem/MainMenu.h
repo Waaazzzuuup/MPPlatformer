@@ -11,6 +11,7 @@ class MPPLATFORMER_API UMainMenu : public UUserWidget
 {
 	GENERATED_BODY()
 public:
+	// we need to connect (create) the interface here 
 	void SetMenuInterface(IMenuInterface* MI);
 	
 protected:
@@ -28,7 +29,7 @@ private:
 
 	UFUNCTION()
 	void BtnJoinClicked();
-
+	// so menu class has an interface
 	IMenuInterface* MenuInterface;
 	
 };

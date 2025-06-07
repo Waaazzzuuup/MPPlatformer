@@ -7,7 +7,7 @@
 
 #include "PuzzlePlatformsGameInstance.generated.h"
 
-// gotta inherit it from an interface to use it
+// gotta inherit it from an interface to use it (create an implementation)
 UCLASS()
 class MPPLATFORMER_API UPuzzlePlatformsGameInstance : public UGameInstance, public IMenuInterface
 {
@@ -18,8 +18,9 @@ public:
 	UPuzzlePlatformsGameInstance( const FObjectInitializer& ObjectInitializer);
 	virtual void Init() override;
 
+	// this is now an override function from the interface
 	UFUNCTION(Exec)
-	void Host();
+	void Host() override;
 
 	UFUNCTION(Exec)
 	void Join(const FString& Address );

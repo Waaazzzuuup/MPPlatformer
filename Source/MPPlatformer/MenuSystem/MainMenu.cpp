@@ -30,6 +30,8 @@ void UMainMenu::BtnHostClicked()
 
 	if(MenuInterface!=nullptr)
 	{
+		// call out a method on the interface
+		// implementation is actually in gameinstance class
 		MenuInterface->Host();
 	}
 }
