@@ -13,6 +13,9 @@ class MPPLATFORMER_API UMainMenu : public UUserWidget
 public:
 	// we need to connect (create) the interface here 
 	void SetMenuInterface(IMenuInterface* MI);
+
+	void Setup();
+	void Teardown();
 	
 protected:
 	virtual bool Initialize() override;

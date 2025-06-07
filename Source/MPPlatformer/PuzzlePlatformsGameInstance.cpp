@@ -23,8 +23,14 @@ void UPuzzlePlatformsGameInstance::Init()
 }
 
 
-void UPuzzlePlatformsGameInstance::Host() override
+void UPuzzlePlatformsGameInstance::Host()
 {
+	// no ensure cos we can host without menu (console perhaps)
+	if (Menu!=nullptr)
+	{
+		Menu->Teardown();
+	}
+	
 	UEngine* Engine = GetEngine();
 	if (!ensure(Engine!=nullptr)) return;
 
@@ -56,21 +62,10 @@ void UPuzzlePlatformsGameInstance::LoadMenu()
 {
 	if (!ensure(MenuClass!=nullptr)) return;
 	
-	UMainMenu* Menu = CreateWidget<UMainMenu>(this, MenuClass);
+	Menu = CreateWidget<UMainMenu>(this, MenuClass);
 	if (!ensure(Menu!=nullptr)) return;
 
-	Menu->AddToViewport();
-	// configure UI navigation mode
-	FInputModeUIOnly InputModeBase;
-	// TakeWidget returns a SWidget needed for this method
-	InputModeBase.SetWidgetToFocus(Menu->TakeWidget());
-	// lock or not lock in window
-	InputModeBase.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-
-	APlayerController* PlayerController = GetFirstLocalPlayerController();
-	if (!ensure(PlayerController!=nullptr)) return;
-	PlayerController->SetInputMode(InputModeBase);
-	PlayerController->bShowMouseCursor = true;
+	Menu->Setup();
 
 	// we can just pass the object that implements methods of an interface
 	// don't need an actual interface class - that's the point 
