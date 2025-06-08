@@ -21,6 +21,9 @@ bool UMainMenu::Initialize()
 	
 	if(!ensure(BtnJoin!=nullptr)) return false;
 	BtnJoin->OnClicked.AddDynamic(this, &UMainMenu::BtnJoinClicked);
+
+	if(!ensure(BtnQuit!=nullptr)) return false;
+	BtnQuit->OnClicked.AddDynamic(this, &UMainMenu::BtnQuitClicked);
 	
 	return true;
 }
@@ -62,5 +65,14 @@ void UMainMenu::BtnJoinClicked()
 	if(MenuInterface!=nullptr)
 	{
 		MenuInterface->Join(Address);
+	}
+}
+
+
+void UMainMenu::BtnQuitClicked()
+{
+	if(MenuInterface!=nullptr)
+	{
+		MenuInterface->QuitGame();
 	}
 }

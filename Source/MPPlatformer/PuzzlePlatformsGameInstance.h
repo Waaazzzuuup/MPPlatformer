@@ -29,6 +29,9 @@ public:
 	void ReturnToMainMenu() override;
 
 	UFUNCTION(Exec)
+	void QuitGame() override;
+
+	UFUNCTION(Exec)
 	void TestConsole();
 
 	UFUNCTION(BlueprintCallable)

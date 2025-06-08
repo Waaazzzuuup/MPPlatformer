@@ -28,6 +28,9 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	UButton* BtnJoin;
 
+	UPROPERTY(meta = (BindWidget))
+	UButton* BtnQuit;
+
 	// switcher and menu widgets
 	UPROPERTY(meta = (BindWidget))
 	class UWidgetSwitcher* MenuSwitcher;
@@ -54,4 +57,6 @@ private:
 	UFUNCTION()
 	void BtnJoinClicked();
 
+	UFUNCTION()
+	void BtnQuitClicked();
 };

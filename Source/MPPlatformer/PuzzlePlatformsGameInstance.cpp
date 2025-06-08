@@ -82,10 +82,19 @@ void UPuzzlePlatformsGameInstance::ReturnToMainMenu()
 
 	Engine->AddOnScreenDebugMessage(0,5,FColor::Green, "RETURN TO MAIN MENU");
 
-	UWorld* World = GetWorld();
-	if (!ensure(World!=nullptr)) return;
+	APlayerController* PlayerController = GetFirstLocalPlayerController();
+	if (!ensure(PlayerController!=nullptr)) return;
 
-	World->ServerTravel("/Game/MenuSystem/MenuLevel");
+	PlayerController->ClientTravel("/Game/MenuSystem/MenuLevel", TRAVEL_Absolute);
+}
+
+
+void UPuzzlePlatformsGameInstance::QuitGame()
+{
+	APlayerController* PlayerController = GetFirstLocalPlayerController();
+	if (!ensure(PlayerController!=nullptr)) return;
+
+	PlayerController->ConsoleCommand("quit");
 }
 
 

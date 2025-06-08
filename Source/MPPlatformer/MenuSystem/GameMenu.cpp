@@ -4,7 +4,8 @@
 
 bool UGameMenu::Initialize()
 {
-	Super::Initialize();
+	bool IsSuperInitialized = Super::Initialize();
+	if (!IsSuperInitialized) return false;
 
 	if(!ensure(BtnCancel!=nullptr)) return false;
 	BtnCancel->OnClicked.AddDynamic(this, &UGameMenu::BtnCancelClicked);
