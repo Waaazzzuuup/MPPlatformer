@@ -3,7 +3,10 @@
 // probably isnt needed
 //#include "UObject/ConstructorHelpers.h"
 
+#include "MenuSystem/MainMenu.h"
+#include "MenuSystem/GameMenu.h"
 #include "Blueprint/UserWidget.h"
+
 
 UPuzzlePlatformsGameInstance::UPuzzlePlatformsGameInstance(const FObjectInitializer& ObjectInitializer)
 {
@@ -13,13 +16,17 @@ UPuzzlePlatformsGameInstance::UPuzzlePlatformsGameInstance(const FObjectInitiali
 	// it is some complex object, but we can extract a class to a variable
 	MenuClass = MenuBPClass.Class;
 	if (!ensure(MenuClass!=nullptr)) UE_LOG(LogTemp, Warning, TEXT("Cant find class %s"), *MenuBPClass.Class->GetName());
+
+	const ConstructorHelpers::FClassFinder<UUserWidget> GameMenuBPClass(TEXT("/Game/MenuSystem/WBP_GameMenu"));
+	// it is some complex object, but we can extract a class to a variable
+	GameMenuClass = GameMenuBPClass.Class;
+	if (!ensure(GameMenuClass!=nullptr)) UE_LOG(LogTemp, Warning, TEXT("Cant find class %s"), *GameMenuBPClass.Class->GetName());
 }
 
 
 void UPuzzlePlatformsGameInstance::Init()
 {
 	Super::Init();
-	UE_LOG(LogTemp, Warning, TEXT("Found class %s"), *MenuClass->GetName());
 }
 
 
@@ -63,6 +70,31 @@ void UPuzzlePlatformsGameInstance::Join(const FString& Address)
 	
 }
 
+void UPuzzlePlatformsGameInstance::ReturnToMainMenu()
+{
+	if (GameMenu!=nullptr)
+	{
+		GameMenu->Teardown();
+	}
+	
+	UEngine* Engine = GetEngine();
+	if (!ensure(Engine!=nullptr)) return;
+
+	Engine->AddOnScreenDebugMessage(0,5,FColor::Green, "RETURN TO MAIN MENU");
+
+	UWorld* World = GetWorld();
+	if (!ensure(World!=nullptr)) return;
+
+	World->ServerTravel("/Game/MenuSystem/MenuLevel");
+}
+
+
+void UPuzzlePlatformsGameInstance::TestConsole()
+{
+	LoadGameMenu();
+}
+
+
 void UPuzzlePlatformsGameInstance::LoadMenu()
 {
 	if (!ensure(MenuClass!=nullptr)) return;
@@ -75,4 +107,17 @@ void UPuzzlePlatformsGameInstance::LoadMenu()
 	// we can just pass the object that implements methods of an interface
 	// don't need an actual interface class - that's the point 
 	Menu->SetMenuInterface(this);
+}
+
+
+void UPuzzlePlatformsGameInstance::LoadGameMenu()
+{
+	if (!ensure(GameMenuClass!=nullptr)) return;
+	// create the widget itself	
+	GameMenu = CreateWidget<UGameMenu>(this, GameMenuClass);
+	if (!ensure(GameMenu!=nullptr)) return;
+	// make it visible (it can do it by itself)
+	GameMenu->Setup();
+	// if we use the interface - set an interface after creation
+	GameMenu->SetMenuInterface(this);
 }

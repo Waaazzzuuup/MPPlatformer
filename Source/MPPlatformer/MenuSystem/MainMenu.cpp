@@ -26,50 +26,6 @@ bool UMainMenu::Initialize()
 }
 
 
-void UMainMenu::SetMenuInterface(IMenuInterface* MI)
-{
-	MenuInterface = MI;
-}
-
-
-void UMainMenu::Setup()
-{
-	this->AddToViewport();
-	// configure UI navigation mode
-	FInputModeUIOnly InputModeBase;
-	// TakeWidget returns a SWidget needed for this method
-	InputModeBase.SetWidgetToFocus(this->TakeWidget());
-	// lock or not lock in window
-	InputModeBase.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-
-	UWorld* World = GetWorld();
-	if(!ensure(World!=nullptr)) return;
-	
-	APlayerController* PlayerController = World->GetFirstPlayerController();
-	if (!ensure(PlayerController!=nullptr)) return;
-	PlayerController->SetInputMode(InputModeBase);
-	PlayerController->bShowMouseCursor = true;
-}
-
-
-void UMainMenu::Teardown()
-{
-	UE_LOG(LogTemp, Warning, TEXT("TEARDOWN CALLED"));
-	
-	FInputModeGameOnly InputModeBase;
-
-	UWorld* World = GetWorld();
-	if(!ensure(World!=nullptr)) return;
-	
-	APlayerController* PlayerController = World->GetFirstPlayerController();
-	if (!ensure(PlayerController!=nullptr)) return;
-	PlayerController->SetInputMode(InputModeBase);
-	PlayerController->bShowMouseCursor = false;
-
-	this->RemoveFromParent();
-}
-
-
 void UMainMenu::BtnHostClicked()
 {
 	UE_LOG(LogTemp, Warning, TEXT("IM BOUT TO HOST IM A SERVER"));

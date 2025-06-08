@@ -1,22 +1,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MenuInterface.h"
+#include "MenuWidget.h"
 #include "Blueprint/UserWidget.h"
 
 #include "MainMenu.generated.h"
 
 UCLASS()
-class MPPLATFORMER_API UMainMenu : public UUserWidget
+class MPPLATFORMER_API UMainMenu : public UMenuWidget
 {
 	GENERATED_BODY()
-public:
-	// we need to connect (create) the interface here 
-	void SetMenuInterface(IMenuInterface* MI);
 
-	void Setup();
-	void Teardown();
-	
 protected:
 	virtual bool Initialize() override;
 
@@ -59,7 +53,5 @@ private:
 
 	UFUNCTION()
 	void BtnJoinClicked();
-	
-	// so menu class has an interface
-	IMenuInterface* MenuInterface;
+
 };

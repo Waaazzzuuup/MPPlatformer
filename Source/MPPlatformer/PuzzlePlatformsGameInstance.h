@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "MenuSystem/MenuInterface.h"
-#include "MenuSystem/MainMenu.h"
+
 
 #include "PuzzlePlatformsGameInstance.generated.h"
 
@@ -25,11 +25,22 @@ public:
 	UFUNCTION(Exec)
 	void Join(const FString& Address ) override;
 
+	UFUNCTION(Exec)
+	void ReturnToMainMenu() override;
+
+	UFUNCTION(Exec)
+	void TestConsole();
+
 	UFUNCTION(BlueprintCallable)
 	void LoadMenu();
 
+	UFUNCTION(BlueprintCallable)
+	void LoadGameMenu();
+
 private:
 	TSubclassOf<class UUserWidget> MenuClass;
+	TSubclassOf<class UUserWidget> GameMenuClass;
 	class UMainMenu* Menu;
+	class UGameMenu* GameMenu;
 	
 };
