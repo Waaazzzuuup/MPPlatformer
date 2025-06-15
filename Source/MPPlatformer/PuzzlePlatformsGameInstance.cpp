@@ -29,10 +29,22 @@ void UPuzzlePlatformsGameInstance::Init()
 {
 	Super::Init();
 
+	UE_LOG(LogTemp, Warning, TEXT("Called Initialize PPGameInstance"));
+	
 	OSS = IOnlineSubsystem::Get();
 	if(OSS!=nullptr)
 	{
-		if(ensure(OSS!=nullptr)) UE_LOG(LogTemp, Warning, TEXT("FOUND OSS %s"), *OSS->GetSubsystemName().ToString());
+		UE_LOG(LogTemp, Warning, TEXT("FOUND OSS %s"), *OSS->GetSubsystemName().ToString());
+		IOnlineSessionPtr SessionInterface = OSS->GetSessionInterface();
+		// shared pointer null check (?)
+		if (SessionInterface.IsValid())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("FOUND Session Interface"));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NO OSS"));
 	}
 }
 
