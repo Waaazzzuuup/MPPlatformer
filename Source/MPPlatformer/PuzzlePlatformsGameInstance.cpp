@@ -21,12 +21,19 @@ UPuzzlePlatformsGameInstance::UPuzzlePlatformsGameInstance(const FObjectInitiali
 	// it is some complex object, but we can extract a class to a variable
 	GameMenuClass = GameMenuBPClass.Class;
 	if (!ensure(GameMenuClass!=nullptr)) UE_LOG(LogTemp, Warning, TEXT("Cant find class %s"), *GameMenuBPClass.Class->GetName());
+	
 }
 
 
 void UPuzzlePlatformsGameInstance::Init()
 {
 	Super::Init();
+
+	OSS = IOnlineSubsystem::Get();
+	if(OSS!=nullptr)
+	{
+		if(ensure(OSS!=nullptr)) UE_LOG(LogTemp, Warning, TEXT("FOUND OSS %s"), *OSS->GetSubsystemName().ToString());
+	}
 }
 
 

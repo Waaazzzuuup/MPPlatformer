@@ -2,8 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "MenuSystem/MenuInterface.h"
+#include "OnlineSubsystem.h"
 
+#include "MenuSystem/MenuInterface.h"
 
 #include "PuzzlePlatformsGameInstance.generated.h"
 
@@ -45,5 +46,6 @@ private:
 	TSubclassOf<class UUserWidget> GameMenuClass;
 	class UMainMenu* Menu;
 	class UGameMenu* GameMenu;
+	IOnlineSubsystem* OSS;
 	
 };
