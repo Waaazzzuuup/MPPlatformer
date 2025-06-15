@@ -18,12 +18,12 @@ UPuzzlePlatformsGameInstance::UPuzzlePlatformsGameInstance(const FObjectInitiali
 	const ConstructorHelpers::FClassFinder<UUserWidget> MenuBPClass(TEXT("/Game/MenuSystem/WBP_MainMenu"));
 	// it is some complex object, but we can extract a class to a variable
 	MenuClass = MenuBPClass.Class;
-	if (!ensure(MenuClass!=nullptr)) UE_LOG(LogTemp, Warning, TEXT("Cant find class %s"), *MenuBPClass.Class->GetName());
+	if (!ensure(MenuClass!=nullptr)) UE_LOG(LogTemp, Warning, TEXT("ERROR: Cant find class %s"), *MenuBPClass.Class->GetName());
 
 	const ConstructorHelpers::FClassFinder<UUserWidget> GameMenuBPClass(TEXT("/Game/MenuSystem/WBP_GameMenu"));
 	// it is some complex object, but we can extract a class to a variable
 	GameMenuClass = GameMenuBPClass.Class;
-	if (!ensure(GameMenuClass!=nullptr)) UE_LOG(LogTemp, Warning, TEXT("Cant find class %s"), *GameMenuBPClass.Class->GetName());
+	if (!ensure(GameMenuClass!=nullptr)) UE_LOG(LogTemp, Warning, TEXT("ERROR: Cant find class %s"), *GameMenuBPClass.Class->GetName());
 }
 
 
@@ -36,20 +36,20 @@ void UPuzzlePlatformsGameInstance::Init()
 	OSS = IOnlineSubsystem::Get();
 	if(OSS!=nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("FOUND OSS %s"), *OSS->GetSubsystemName().ToString());
+		UE_LOG(LogTemp, Warning, TEXT("Found OSS: %s"), *OSS->GetSubsystemName().ToString());
 		// we get a shared pointer to the interface here
 		SessionInterface = OSS->GetSessionInterface();
 		// shared pointer null check (?)
 		if (SessionInterface.IsValid())
 		{
-			// bind a delegate when session has been started (in a host)
+			// bind delegates there, we have a pointer
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnCreateSessionComplete);
 			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnDestroySessionComplete);
 		}
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("NO OSS"));
+		UE_LOG(LogTemp, Warning, TEXT("ERROR: No OSS found"));
 	}
 }
 
@@ -58,7 +58,7 @@ void UPuzzlePlatformsGameInstance::OnCreateSessionComplete(FName SessionName, bo
 {
 	if(!Succeeded)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ERROR: Cant create session!"));
+		UE_LOG(LogTemp, Warning, TEXT("ERROR: Cant create session %s!"), *SessionName.ToString());
 		return;
 	}
 	
@@ -71,7 +71,7 @@ void UPuzzlePlatformsGameInstance::OnCreateSessionComplete(FName SessionName, bo
 	UEngine* Engine = GetEngine();
 	if (!ensure(Engine!=nullptr)) return;
 
-	Engine->AddOnScreenDebugMessage(0,5,FColor::Green, "HOSTING");
+	Engine->AddOnScreenDebugMessage(0,5,FColor::Green, "Hosting...");
 
 	UWorld* World = GetWorld();
 	if (!ensure(World!=nullptr)) return;
@@ -79,7 +79,7 @@ void UPuzzlePlatformsGameInstance::OnCreateSessionComplete(FName SessionName, bo
 	World->ServerTravel("/Game/ThirdPerson/Maps/ThirdPersonMap?listen");
 }
 
-
+// this declaration must match a delegate of after-session-destoying func 
 void UPuzzlePlatformsGameInstance::OnDestroySessionComplete(FName SessionName, bool Succeeded)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Called OnDestroyComplete for %s"), *SessionName.ToString());
@@ -134,7 +134,7 @@ void UPuzzlePlatformsGameInstance::Join(const FString& Address)
 	UEngine* Engine = GetEngine();
 	if (!ensure(Engine!=nullptr)) return;
 	
-	Engine->AddOnScreenDebugMessage(0,5,FColor::Green,FString::Printf(TEXT("JOINING %s"), *Address));
+	Engine->AddOnScreenDebugMessage(0,5,FColor::Green,FString::Printf(TEXT("Joining %s..."), *Address));
 
 	APlayerController* PlayerController = GetFirstLocalPlayerController();
 	if (!ensure(PlayerController!=nullptr)) return;
@@ -150,11 +150,6 @@ void UPuzzlePlatformsGameInstance::ReturnToMainMenu()
 		GameMenu->Teardown();
 	}
 	
-	UEngine* Engine = GetEngine();
-	if (!ensure(Engine!=nullptr)) return;
-
-	Engine->AddOnScreenDebugMessage(0,5,FColor::Green, "RETURN TO MAIN MENU");
-
 	APlayerController* PlayerController = GetFirstLocalPlayerController();
 	if (!ensure(PlayerController!=nullptr)) return;
 
@@ -170,7 +165,7 @@ void UPuzzlePlatformsGameInstance::QuitGame()
 	PlayerController->ConsoleCommand("quit");
 }
 
-
+// small method for console test of any func
 void UPuzzlePlatformsGameInstance::TestConsole()
 {
 	LoadGameMenu();
