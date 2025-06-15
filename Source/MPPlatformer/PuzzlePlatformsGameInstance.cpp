@@ -2,10 +2,13 @@
 
 // probably isnt needed
 //#include "UObject/ConstructorHelpers.h"
+#include "Blueprint/UserWidget.h"
+#include "OnlineSessionSettings.h"
+#include "Interfaces/OnlineSessionInterface.h"
 
 #include "MenuSystem/MainMenu.h"
 #include "MenuSystem/GameMenu.h"
-#include "Blueprint/UserWidget.h"
+
 
 
 UPuzzlePlatformsGameInstance::UPuzzlePlatformsGameInstance(const FObjectInitializer& ObjectInitializer)
@@ -35,11 +38,13 @@ void UPuzzlePlatformsGameInstance::Init()
 	if(OSS!=nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("FOUND OSS %s"), *OSS->GetSubsystemName().ToString());
-		IOnlineSessionPtr SessionInterface = OSS->GetSessionInterface();
+		// we get a shared pointer to the interface here
+		SessionInterface = OSS->GetSessionInterface();
 		// shared pointer null check (?)
 		if (SessionInterface.IsValid())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("FOUND Session Interface"));
+			// bind a delegate when session has been started (in a host)
+			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnCreateSessionComplete);
 		}
 	}
 	else
@@ -48,9 +53,15 @@ void UPuzzlePlatformsGameInstance::Init()
 	}
 }
 
-
-void UPuzzlePlatformsGameInstance::Host()
+// this declaration must match a delegate of after-session-creation func 
+void UPuzzlePlatformsGameInstance::OnCreateSessionComplete(FName SessionName, bool Succeeded)
 {
+	if(!Succeeded)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ERROR: Cant create session!"));
+		return;
+	}
+	
 	// no ensure cos we can host without menu (console perhaps)
 	if (Menu!=nullptr)
 	{
@@ -66,7 +77,17 @@ void UPuzzlePlatformsGameInstance::Host()
 	if (!ensure(World!=nullptr)) return;
 
 	World->ServerTravel("/Game/ThirdPerson/Maps/ThirdPersonMap?listen");
-	
+}
+
+// host now creates a session, and we already know the pointer to it (shared pointer)
+void UPuzzlePlatformsGameInstance::Host()
+{
+	if(SessionInterface.IsValid())
+	{
+		FOnlineSessionSettings MySessionSettings;
+		// this is async, it calls a delegate when created; delegate binds in Init()
+		SessionInterface->CreateSession(0,TEXT("MySession"), MySessionSettings);
+	}
 }
 
 
@@ -149,3 +170,5 @@ void UPuzzlePlatformsGameInstance::LoadGameMenu()
 	// if we use the interface - set an interface after creation
 	GameMenu->SetMenuInterface(this);
 }
+
+
