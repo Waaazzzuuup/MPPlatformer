@@ -31,8 +31,6 @@ bool UMainMenu::Initialize()
 
 void UMainMenu::BtnHostClicked()
 {
-	UE_LOG(LogTemp, Warning, TEXT("IM BOUT TO HOST IM A SERVER"));
-	
 	if(MenuInterface!=nullptr)
 	{
 		// call out a method on the interface

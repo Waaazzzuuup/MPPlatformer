@@ -9,11 +9,11 @@
 #include "MenuSystem/MainMenu.h"
 #include "MenuSystem/GameMenu.h"
 
-
+const static FName SESSION_NAME = TEXT("MySessionGame");
 
 UPuzzlePlatformsGameInstance::UPuzzlePlatformsGameInstance(const FObjectInitializer& ObjectInitializer)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Called a constructor"));
+	UE_LOG(LogTemp, Warning, TEXT("Called a constructor PPGameInstance"));
 	// find a BP child of some C++ class (or any BP)
 	const ConstructorHelpers::FClassFinder<UUserWidget> MenuBPClass(TEXT("/Game/MenuSystem/WBP_MainMenu"));
 	// it is some complex object, but we can extract a class to a variable
@@ -24,7 +24,6 @@ UPuzzlePlatformsGameInstance::UPuzzlePlatformsGameInstance(const FObjectInitiali
 	// it is some complex object, but we can extract a class to a variable
 	GameMenuClass = GameMenuBPClass.Class;
 	if (!ensure(GameMenuClass!=nullptr)) UE_LOG(LogTemp, Warning, TEXT("Cant find class %s"), *GameMenuBPClass.Class->GetName());
-	
 }
 
 
@@ -45,6 +44,7 @@ void UPuzzlePlatformsGameInstance::Init()
 		{
 			// bind a delegate when session has been started (in a host)
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnCreateSessionComplete);
+			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnDestroySessionComplete);
 		}
 	}
 	else
@@ -79,14 +79,47 @@ void UPuzzlePlatformsGameInstance::OnCreateSessionComplete(FName SessionName, bo
 	World->ServerTravel("/Game/ThirdPerson/Maps/ThirdPersonMap?listen");
 }
 
+
+void UPuzzlePlatformsGameInstance::OnDestroySessionComplete(FName SessionName, bool Succeeded)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Called OnDestroyComplete for %s"), *SessionName.ToString());
+	if (Succeeded)
+	{
+		CreateSession();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ERROR: Not succeeded on destroying session %s"), *SessionName.ToString());
+	}
+}
+
+
+void UPuzzlePlatformsGameInstance::CreateSession()
+{
+	if(SessionInterface.IsValid())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Called CreateSession"));
+		FOnlineSessionSettings MySessionSettings;
+		// this is async, it calls a delegate when created; delegate binds in Init()
+		SessionInterface->CreateSession(0,SESSION_NAME, MySessionSettings);
+	}
+}
+
+
 // host now creates a session, and we already know the pointer to it (shared pointer)
 void UPuzzlePlatformsGameInstance::Host()
 {
 	if(SessionInterface.IsValid())
 	{
-		FOnlineSessionSettings MySessionSettings;
-		// this is async, it calls a delegate when created; delegate binds in Init()
-		SessionInterface->CreateSession(0,TEXT("MySession"), MySessionSettings);
+		auto ExistingSession = SessionInterface->GetNamedSession(SESSION_NAME);
+		if (ExistingSession != nullptr)
+		{
+			SessionInterface->DestroySession(SESSION_NAME);
+		}
+		else
+		{
+			CreateSession();
+		}
 	}
 }
 
