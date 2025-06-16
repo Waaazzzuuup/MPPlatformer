@@ -4,6 +4,7 @@
 #include "Engine/GameInstance.h"
 #include "OnlineSubsystem.h" // needed here for shared pointer IOnlineSessionPtr 
 // local code includes
+#include "OnlineSessionSettings.h"
 #include "MenuSystem/MenuInterface.h"
 // generated mess
 #include "PuzzlePlatformsGameInstance.generated.h"
@@ -48,8 +49,11 @@ private:
 	class UGameMenu* GameMenu;
 	IOnlineSubsystem* OSS;
 	IOnlineSessionPtr SessionInterface;
-
+	TSharedPtr<FOnlineSessionSearch> SessionSearch;
+	// callbacks to IOnlineSession delegates
 	void OnCreateSessionComplete(FName SessionName, bool Succeeded);
 	void OnDestroySessionComplete(FName SessionName, bool Succeeded);
+	void OnFindSessionsComplete(bool Succeeded);
+
 	void CreateSession();
 };

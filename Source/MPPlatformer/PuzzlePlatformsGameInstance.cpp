@@ -45,6 +45,15 @@ void UPuzzlePlatformsGameInstance::Init()
 			// bind delegates there, we have a pointer
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnCreateSessionComplete);
 			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnDestroySessionComplete);
+			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnFindSessionsComplete);
+			// we create an object, then make it a shared ptr
+			SessionSearch = MakeShareable(new FOnlineSessionSearch);
+			if (SessionSearch.IsValid())
+			{
+				// shared ptr -> shared ref (shared ref must have a longer life than session itself)
+				// shared ref cant be created if null - it must be always not null
+				SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+			}
 		}
 	}
 	else
@@ -91,6 +100,20 @@ void UPuzzlePlatformsGameInstance::OnDestroySessionComplete(FName SessionName, b
 	{
 		UE_LOG(LogTemp, Warning, TEXT("ERROR: Not succeeded on destroying session %s"), *SessionName.ToString());
 	}
+}
+
+// this declaration must match a delegate 
+void UPuzzlePlatformsGameInstance::OnFindSessionsComplete(bool Succeeded)
+{
+	if(!Succeeded)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("FindSessionComplete returned FALSE"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("FindSessionComplete returned TRUE"));
+	}
+	
 }
 
 
