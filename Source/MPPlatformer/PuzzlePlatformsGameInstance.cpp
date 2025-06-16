@@ -50,6 +50,9 @@ void UPuzzlePlatformsGameInstance::Init()
 			SessionSearch = MakeShareable(new FOnlineSessionSearch);
 			if (SessionSearch.IsValid())
 			{
+				UE_LOG(LogTemp, Warning, TEXT("Looking for Sessions..."));
+				SessionSearch->bIsLanQuery = true;
+				//SessionSearch->QuerySettings.Set(name, value) // later for Steam
 				// shared ptr -> shared ref (shared ref must have a longer life than session itself)
 				// shared ref cant be created if null - it must be always not null
 				SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
@@ -108,10 +111,16 @@ void UPuzzlePlatformsGameInstance::OnFindSessionsComplete(bool Succeeded)
 	if(!Succeeded)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("FindSessionComplete returned FALSE"));
+		return;
 	}
-	else
+
+	if (SessionSearch.IsValid())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("FindSessionComplete returned TRUE"));
+		UE_LOG(LogTemp, Warning, TEXT("FOUND %d Sessions!"), SessionSearch->SearchResults.Num());
+		for (const FOnlineSessionSearchResult& Result:SessionSearch->SearchResults)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("FOUND SESSION:  %s"), *Result.GetSessionIdStr());
+		}
 	}
 	
 }
@@ -122,7 +131,11 @@ void UPuzzlePlatformsGameInstance::CreateSession()
 	if(SessionInterface.IsValid())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Called CreateSession"));
+		// some settings
 		FOnlineSessionSettings MySessionSettings;
+		MySessionSettings.bIsLANMatch = true;
+		MySessionSettings.NumPublicConnections = 4;
+		MySessionSettings.bShouldAdvertise = true;
 		// this is async, it calls a delegate when created; delegate binds in Init()
 		SessionInterface->CreateSession(0,SESSION_NAME, MySessionSettings);
 	}
