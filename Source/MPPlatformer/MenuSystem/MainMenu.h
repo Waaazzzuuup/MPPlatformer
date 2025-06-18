@@ -11,6 +11,9 @@ class MPPLATFORMER_API UMainMenu : public UMenuWidget
 {
 	GENERATED_BODY()
 
+public:
+	UMainMenu(const FObjectInitializer& ObjectInitializer );
+
 protected:
 	virtual bool Initialize() override;
 
@@ -42,7 +45,9 @@ private:
 	UWidget* StartMenu;
 
 	UPROPERTY(meta = (BindWidget))
-	class UEditableText* EditTextAddress;
+	UPanelWidget* ScrollBoxServerList;
+
+	TSubclassOf<class UUserWidget> ServerRowClass;
 
 	// button functions 
 	UFUNCTION()

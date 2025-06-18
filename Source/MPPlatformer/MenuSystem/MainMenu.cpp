@@ -1,8 +1,17 @@
 #include "MainMenu.h"
 
+#include "ServerRow.h"
 #include "Components/Button.h"
 #include "Components/WidgetSwitcher.h"
-#include "Components/EditableText.h"
+// ConstructorHelpers isnt needed for constructor
+
+UMainMenu::UMainMenu(const FObjectInitializer& ObjectInitializer )
+{
+	const ConstructorHelpers::FClassFinder<UUserWidget> ServerRowBPClass(TEXT("/Game/MenuSystem/WBP_ServerRow"));
+	// it is some complex object, but we can extract a class to a variable
+	ServerRowClass = ServerRowBPClass.Class;
+	if (!ensure(ServerRowClass!=nullptr)) UE_LOG(LogTemp, Warning, TEXT("ERROR: MainMenu: Cant find class ServerRow"));
+}
 
 
 bool UMainMenu::Initialize()
@@ -58,12 +67,16 @@ void UMainMenu::BtnBackClicked()
 
 void UMainMenu::BtnJoinClicked()
 {
-	if(!ensure(EditTextAddress!=nullptr)) return;
-	FString Address = EditTextAddress->GetText().ToString();
-	if(MenuInterface!=nullptr)
-	{
-		MenuInterface->Join(Address);
-	}
+	// if(!ensure(EditTextAddress!=nullptr)) return;
+	// FString Address = EditTextAddress->GetText().ToString();
+	// if(MenuInterface!=nullptr)
+	// {
+	// 	MenuInterface->Join(Address);
+	// }
+	UServerRow* Row = CreateWidget<UServerRow>(this, ServerRowClass);
+
+	ScrollBoxServerList->AddChild(Row);
+	
 }
 
 

@@ -18,12 +18,12 @@ UPuzzlePlatformsGameInstance::UPuzzlePlatformsGameInstance(const FObjectInitiali
 	const ConstructorHelpers::FClassFinder<UUserWidget> MenuBPClass(TEXT("/Game/MenuSystem/WBP_MainMenu"));
 	// it is some complex object, but we can extract a class to a variable
 	MenuClass = MenuBPClass.Class;
-	if (!ensure(MenuClass!=nullptr)) UE_LOG(LogTemp, Warning, TEXT("ERROR: Cant find class %s"), *MenuBPClass.Class->GetName());
+	if (!ensure(MenuClass!=nullptr)) UE_LOG(LogTemp, Warning, TEXT("ERROR: PPGI: Cant find class MenuClass"));
 
 	const ConstructorHelpers::FClassFinder<UUserWidget> GameMenuBPClass(TEXT("/Game/MenuSystem/WBP_GameMenu"));
 	// it is some complex object, but we can extract a class to a variable
 	GameMenuClass = GameMenuBPClass.Class;
-	if (!ensure(GameMenuClass!=nullptr)) UE_LOG(LogTemp, Warning, TEXT("ERROR: Cant find class %s"), *GameMenuBPClass.Class->GetName());
+	if (!ensure(GameMenuClass!=nullptr)) UE_LOG(LogTemp, Warning, TEXT("ERROR: PPGI: Cant find class GameMenuClass"));
 }
 
 
