@@ -5,6 +5,7 @@
 #include "OnlineSubsystem.h" // needed here for shared pointer IOnlineSessionPtr 
 // local code includes
 #include "OnlineSessionSettings.h"
+#include "Interfaces/OnlineSessionInterface.h"
 #include "MenuSystem/MenuInterface.h"
 // generated mess
 #include "PuzzlePlatformsGameInstance.generated.h"
@@ -25,13 +26,16 @@ public:
 	void Host() override;
 
 	UFUNCTION(Exec)
-	void Join(const FString& Address ) override;
+	void Join(uint32 Index) override;
 
 	UFUNCTION(Exec)
 	void ReturnToMainMenu() override;
 
 	UFUNCTION(Exec)
 	void QuitGame() override;
+
+	UFUNCTION(Exec)
+	void RefreshServerList() override;
 
 	UFUNCTION(Exec)
 	void TestConsole();
@@ -54,6 +58,7 @@ private:
 	void OnCreateSessionComplete(FName SessionName, bool Succeeded);
 	void OnDestroySessionComplete(FName SessionName, bool Succeeded);
 	void OnFindSessionsComplete(bool Succeeded);
+	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
 	void CreateSession();
 };

@@ -11,6 +11,7 @@
 
 const static FName SESSION_NAME = TEXT("MySessionGame");
 
+
 UPuzzlePlatformsGameInstance::UPuzzlePlatformsGameInstance(const FObjectInitializer& ObjectInitializer)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Called a constructor PPGameInstance"));
@@ -48,15 +49,6 @@ void UPuzzlePlatformsGameInstance::Init()
 			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnFindSessionsComplete);
 			// we create an object, then make it a shared ptr
 			SessionSearch = MakeShareable(new FOnlineSessionSearch);
-			if (SessionSearch.IsValid())
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Looking for Sessions..."));
-				SessionSearch->bIsLanQuery = true;
-				//SessionSearch->QuerySettings.Set(name, value) // later for Steam
-				// shared ptr -> shared ref (shared ref must have a longer life than session itself)
-				// shared ref cant be created if null - it must be always not null
-				SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
-			}
 		}
 	}
 	else
@@ -117,12 +109,47 @@ void UPuzzlePlatformsGameInstance::OnFindSessionsComplete(bool Succeeded)
 	if (SessionSearch.IsValid())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("FOUND %d Sessions!"), SessionSearch->SearchResults.Num());
+		TArray<FString> FoundSessionsList;
 		for (const FOnlineSessionSearchResult& Result:SessionSearch->SearchResults)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("FOUND SESSION:  %s"), *Result.GetSessionIdStr());
+			FoundSessionsList.Add(*Result.GetSessionIdStr()); 
 		}
+		Menu->SetServerList(FoundSessionsList);
 	}
 	
+}
+
+void UPuzzlePlatformsGameInstance::OnJoinSessionComplete(FName SessionName,
+	EOnJoinSessionCompleteResult::Type Result)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Fired a delegate OnJoinSessionComplete"));
+	if(!SessionInterface.IsValid()) return;
+	
+	if(Result!=EOnJoinSessionCompleteResult::Type::Success)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ERROR: JoinSession returned not Success!"));
+		return;
+	}
+	
+	FString ConnectString;
+	bool IsResolved = SessionInterface->GetResolvedConnectString(SESSION_NAME, ConnectString);
+	if(!IsResolved)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ERROR: SessionInterface cant resolve!"));
+		return;
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("%s..."), *ConnectString);
+	
+	UEngine* Engine = GetEngine();
+	if (!ensure(Engine!=nullptr)) return;
+	
+	Engine->AddOnScreenDebugMessage(0,5,FColor::Green,FString::Printf(TEXT("Joining %s..."), *ConnectString));
+	
+	APlayerController* PlayerController = GetFirstLocalPlayerController();
+	if (!ensure(PlayerController!=nullptr)) return;
+	
+	PlayerController->ClientTravel(ConnectString, TRAVEL_Absolute);
 }
 
 
@@ -160,45 +187,30 @@ void UPuzzlePlatformsGameInstance::Host()
 }
 
 
-void UPuzzlePlatformsGameInstance::Join(const FString& Address)
+void UPuzzlePlatformsGameInstance::Join(uint32 Index)
 {
-	if (Menu!=nullptr)
-	{
-		Menu->Teardown();
-	}
-	
-	UEngine* Engine = GetEngine();
-	if (!ensure(Engine!=nullptr)) return;
-	
-	Engine->AddOnScreenDebugMessage(0,5,FColor::Green,FString::Printf(TEXT("Joining %s..."), *Address));
+	if(!SessionInterface.IsValid())	return;
 
-	APlayerController* PlayerController = GetFirstLocalPlayerController();
-	if (!ensure(PlayerController!=nullptr)) return;
+	if (Menu!=nullptr)	Menu->Teardown();
 
-	PlayerController->ClientTravel(Address, TRAVEL_Absolute);
+	if(!SessionSearch.IsValid()) return;
 	
-}
-
-void UPuzzlePlatformsGameInstance::ReturnToMainMenu()
-{
-	if (GameMenu!=nullptr)
-	{
-		GameMenu->Teardown();
-	}
-	
-	APlayerController* PlayerController = GetFirstLocalPlayerController();
-	if (!ensure(PlayerController!=nullptr)) return;
-
-	PlayerController->ClientTravel("/Game/MenuSystem/MenuLevel", TRAVEL_Absolute);
+	bool IsJoined = SessionInterface->JoinSession(0,SESSION_NAME, SessionSearch->SearchResults[Index]);
+	if(!IsJoined) UE_LOG(LogTemp, Warning, TEXT("ERROR: SessionInterface->JoinSession cant join"));
 }
 
 
-void UPuzzlePlatformsGameInstance::QuitGame()
+void UPuzzlePlatformsGameInstance::RefreshServerList()
 {
-	APlayerController* PlayerController = GetFirstLocalPlayerController();
-	if (!ensure(PlayerController!=nullptr)) return;
-
-	PlayerController->ConsoleCommand("quit");
+	if (SessionSearch.IsValid())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Looking for Sessions..."));
+		SessionSearch->bIsLanQuery = true;
+		//SessionSearch->QuerySettings.Set(name, value) // later for Steam
+		// shared ptr -> shared ref (shared ref must have a longer life than session itself)
+		// shared ref cant be created if null - it must be always not null
+		SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+	}
 }
 
 // small method for console test of any func
@@ -235,4 +247,26 @@ void UPuzzlePlatformsGameInstance::LoadGameMenu()
 	GameMenu->SetMenuInterface(this);
 }
 
+
+void UPuzzlePlatformsGameInstance::ReturnToMainMenu()
+{
+	if (GameMenu!=nullptr)
+	{
+		GameMenu->Teardown();
+	}
+	
+	APlayerController* PlayerController = GetFirstLocalPlayerController();
+	if (!ensure(PlayerController!=nullptr)) return;
+
+	PlayerController->ClientTravel("/Game/MenuSystem/MenuLevel", TRAVEL_Absolute);
+}
+
+
+void UPuzzlePlatformsGameInstance::QuitGame()
+{
+	APlayerController* PlayerController = GetFirstLocalPlayerController();
+	if (!ensure(PlayerController!=nullptr)) return;
+
+	PlayerController->ConsoleCommand("quit");
+}
 

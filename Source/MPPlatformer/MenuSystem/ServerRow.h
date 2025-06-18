@@ -5,7 +5,6 @@
 
 #include "ServerRow.generated.h"
 
-
 UCLASS()
 class MPPLATFORMER_API UServerRow : public UUserWidget
 {
@@ -14,4 +13,19 @@ class MPPLATFORMER_API UServerRow : public UUserWidget
 public:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* ServerName;
+
+	void Setup(class UMainMenu* NewParent, uint32 NewIndex);
+
+private:
+	UPROPERTY(meta = (BindWidget))
+	class UButton* Btn;
+
+	UPROPERTY()
+	class UMainMenu* Parent;
+
+	uint32 Index;
+	
+	UFUNCTION()
+	void BtnClicked();
+	
 };

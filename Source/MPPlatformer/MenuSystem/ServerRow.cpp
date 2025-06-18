@@ -1,4 +1,20 @@
 #include "ServerRow.h"
 
-#include "Components/TextBlock.h"
+#include "MainMenu.h"
+#include "Components/Button.h"
 
+
+void UServerRow::Setup(UMainMenu* NewParent, uint32 NewIndex)
+{
+	Parent = NewParent;
+	Index = NewIndex;
+	if(!ensure(Btn!=nullptr)) return;
+	Btn->OnClicked.AddDynamic(this, &UServerRow::BtnClicked);
+}
+
+
+void UServerRow::BtnClicked()
+{
+	if(!ensure(Parent!=nullptr)) return;
+	Parent->SelectIndex(Index);
+}

@@ -3,6 +3,7 @@
 #include "ServerRow.h"
 #include "Components/Button.h"
 #include "Components/WidgetSwitcher.h"
+#include "Components/TextBlock.h"
 // ConstructorHelpers isnt needed for constructor
 
 UMainMenu::UMainMenu(const FObjectInitializer& ObjectInitializer )
@@ -38,6 +39,30 @@ bool UMainMenu::Initialize()
 }
 
 
+void UMainMenu::SetServerList(TArray<FString> ServerNames)
+{
+	ScrollBoxServerList->ClearChildren();
+
+	uint32 idx = 0;
+	for (const FString& ServerName : ServerNames)
+	{
+		UServerRow* Row = CreateWidget<UServerRow>(this, ServerRowClass);
+		Row->ServerName->SetText(FText::FromString(ServerName));
+		Row->Setup(this, idx);
+		++idx;
+		ScrollBoxServerList->AddChild(Row);
+	}
+
+}
+
+
+void UMainMenu::SelectIndex(uint32 Index)
+{
+	// overload which is Set() + IsSet()
+	SelectedIndex = Index;
+}
+
+
 void UMainMenu::BtnHostClicked()
 {
 	if(MenuInterface!=nullptr)
@@ -48,12 +73,15 @@ void UMainMenu::BtnHostClicked()
 	}
 }
 
+
 void UMainMenu::BtnOpenJoinMenuClicked() 
 {
 	if(!ensure(MenuSwitcher!=nullptr)) return;
 	// can do it by index, but this is safer
 	if(!ensure(JoinMenu!=nullptr)) return;
 	MenuSwitcher->SetActiveWidget(JoinMenu);
+	if(!ensure(MenuInterface!=nullptr)) return;
+	MenuInterface->RefreshServerList();
 }
 
 
@@ -67,15 +95,15 @@ void UMainMenu::BtnBackClicked()
 
 void UMainMenu::BtnJoinClicked()
 {
-	// if(!ensure(EditTextAddress!=nullptr)) return;
-	// FString Address = EditTextAddress->GetText().ToString();
-	// if(MenuInterface!=nullptr)
-	// {
-	// 	MenuInterface->Join(Address);
-	// }
-	UServerRow* Row = CreateWidget<UServerRow>(this, ServerRowClass);
-
-	ScrollBoxServerList->AddChild(Row);
+	if (SelectedIndex.IsSet() && MenuInterface!=nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Selected index: %d"), SelectedIndex.GetValue());
+		MenuInterface->Join(SelectedIndex.GetValue());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ERROR: Selected index not set!"));
+	}
 	
 }
 
