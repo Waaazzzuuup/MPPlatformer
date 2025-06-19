@@ -5,6 +5,8 @@
 #include "Blueprint/UserWidget.h"
 #include "OnlineSessionSettings.h"
 #include "Interfaces/OnlineSessionInterface.h"
+// a new way to get online session interface
+//#include "Online.h"
 
 #include "MenuSystem/MainMenu.h"
 #include "MenuSystem/GameMenu.h"
@@ -36,10 +38,16 @@ void UPuzzlePlatformsGameInstance::Init()
 	
 	OSS = IOnlineSubsystem::Get();
 	if(OSS!=nullptr)
+	// UWorld* const World = GetWorld();
+	// if (World!=nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Found OSS: %s"), *OSS->GetSubsystemName().ToString());
 		// we get a shared pointer to the interface here
 		SessionInterface = OSS->GetSessionInterface();
+
+		//new way to get session interface
+		// SessionInterface = Online::GetSessionInterface();
+		
 		// shared pointer null check (?)
 		if (SessionInterface.IsValid())
 		{
@@ -47,9 +55,10 @@ void UPuzzlePlatformsGameInstance::Init()
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnCreateSessionComplete);
 			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnDestroySessionComplete);
 			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnFindSessionsComplete);
-			// we create an object, then make it a shared ptr
-			SessionSearch = MakeShareable(new FOnlineSessionSearch);
+			SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnJoinSessionComplete);
 		}
+		// we create an object, then make it a shared ptr
+		SessionSearch = MakeShareable(new FOnlineSessionSearch);
 	}
 	else
 	{
@@ -168,7 +177,6 @@ void UPuzzlePlatformsGameInstance::CreateSession()
 	}
 }
 
-
 // host now creates a session, and we already know the pointer to it (shared pointer)
 void UPuzzlePlatformsGameInstance::Host()
 {
@@ -194,9 +202,19 @@ void UPuzzlePlatformsGameInstance::Join(uint32 Index)
 	if (Menu!=nullptr)	Menu->Teardown();
 
 	if(!SessionSearch.IsValid()) return;
-	
+
+	UE_LOG(LogTemp, Warning, TEXT("JOIN: All good, trying to join session..."));
+
 	bool IsJoined = SessionInterface->JoinSession(0,SESSION_NAME, SessionSearch->SearchResults[Index]);
-	if(!IsJoined) UE_LOG(LogTemp, Warning, TEXT("ERROR: SessionInterface->JoinSession cant join"));
+	if(!IsJoined)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ERROR: SessionInterface->JoinSession cant join"))
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Seems like JoinSession is success... "));
+	}
+	
 }
 
 
