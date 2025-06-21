@@ -203,18 +203,8 @@ void UPuzzlePlatformsGameInstance::Join(uint32 Index)
 
 	if(!SessionSearch.IsValid()) return;
 
-	UE_LOG(LogTemp, Warning, TEXT("JOIN: All good, trying to join session..."));
-
 	bool IsJoined = SessionInterface->JoinSession(0,SESSION_NAME, SessionSearch->SearchResults[Index]);
-	if(!IsJoined)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("ERROR: SessionInterface->JoinSession cant join"))
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Seems like JoinSession is success... "));
-	}
-	
+	if(!IsJoined) UE_LOG(LogTemp, Warning, TEXT("ERROR: SessionInterface->JoinSession cant join"))
 }
 
 
