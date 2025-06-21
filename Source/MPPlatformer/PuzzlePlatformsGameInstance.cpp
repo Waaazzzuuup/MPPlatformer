@@ -5,6 +5,8 @@
 #include "Blueprint/UserWidget.h"
 #include "OnlineSessionSettings.h"
 #include "Interfaces/OnlineSessionInterface.h"
+// needed for macro "SEARCH_PRESENCE"
+#include "Online/OnlineSessionNames.h"
 // a new way to get online session interface
 //#include "Online.h"
 
@@ -218,8 +220,8 @@ void UPuzzlePlatformsGameInstance::RefreshServerList()
 		UE_LOG(LogTemp, Warning, TEXT("Looking for Sessions..."));
 		//SessionSearch->bIsLanQuery = true;
 		// Options for search in Steam. 
-		SessionSearch->QuerySettings.Set("SEARCH_PRESENCE", true, EOnlineComparisonOp::Equals);
-		SessionSearch->MaxSearchResults = 200000;
+		SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
+		SessionSearch->MaxSearchResults = 500000;
 		// shared ptr -> shared ref (shared ref must have a longer life than session itself)
 		// shared ref cant be created if null - it must be always not null
 		SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
