@@ -8,8 +8,8 @@ void UServerRow::Setup(UMainMenu* NewParent, uint32 NewIndex)
 {
 	Parent = NewParent;
 	Index = NewIndex;
-	if(!ensure(Btn!=nullptr)) return;
-	Btn->OnClicked.AddDynamic(this, &UServerRow::BtnClicked);
+	if(!ensure(BackgroundButton!=nullptr)) return;
+	BackgroundButton->OnClicked.AddDynamic(this, &UServerRow::BtnClicked);
 }
 
 

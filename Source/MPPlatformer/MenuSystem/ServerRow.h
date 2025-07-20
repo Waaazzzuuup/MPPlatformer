@@ -20,14 +20,16 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* NumPlayers;
 
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	class UButton* BackgroundButton;
+
 	void Setup(class UMainMenu* NewParent, uint32 NewIndex);
 
 	UPROPERTY(BlueprintReadOnly)
 	bool IsSelected = false;
 
 private:
-	UPROPERTY(meta = (BindWidget))
-	class UButton* Btn;
+
 
 	UPROPERTY()
 	class UMainMenu* Parent;
