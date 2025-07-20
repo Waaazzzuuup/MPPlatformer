@@ -221,7 +221,7 @@ void UPuzzlePlatformsGameInstance::RefreshServerList()
 		//SessionSearch->bIsLanQuery = true;
 		// Options for search in Steam. 
 		SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
-		SessionSearch->MaxSearchResults = 500000;
+		SessionSearch->MaxSearchResults = 1000;
 		// shared ptr -> shared ref (shared ref must have a longer life than session itself)
 		// shared ref cant be created if null - it must be always not null
 		SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
