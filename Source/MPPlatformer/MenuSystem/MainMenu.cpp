@@ -60,6 +60,20 @@ void UMainMenu::SelectIndex(uint32 Index)
 {
 	// overload which is Set() + IsSet()
 	SelectedIndex = Index;
+	UpdateChildrenRows();
+}
+
+
+void UMainMenu::UpdateChildrenRows()
+{
+	for (int32 i = 0; i < ScrollBoxServerList->GetChildrenCount(); i++)
+	{
+		auto Row = Cast<UServerRow>(ScrollBoxServerList->GetChildAt(i));
+		if (Row!= nullptr) 
+		{
+			Row->IsSelected = (SelectedIndex.IsSet() && SelectedIndex.GetValue() == i);
+		}
+	}
 }
 
 

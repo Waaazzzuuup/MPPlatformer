@@ -16,6 +16,9 @@ public:
 
 	void Setup(class UMainMenu* NewParent, uint32 NewIndex);
 
+	UPROPERTY(BlueprintReadOnly)
+	bool IsSelected = false;
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* Btn;

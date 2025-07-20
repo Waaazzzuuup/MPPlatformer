@@ -69,4 +69,6 @@ private:
 
 	UFUNCTION()
 	void BtnQuitClicked();
+
+	void UpdateChildrenRows();
 };
