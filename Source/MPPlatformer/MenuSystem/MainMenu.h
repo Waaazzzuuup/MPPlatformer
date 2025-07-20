@@ -6,6 +6,18 @@
 
 #include "MainMenu.generated.h"
 
+USTRUCT()
+struct FServerData
+{
+	GENERATED_BODY()
+	FString ServerName;
+	FString UserName;
+	uint16 CurrentPlayers;
+	uint16 MaxPlayers;
+	
+};
+
+
 UCLASS()
 class MPPLATFORMER_API UMainMenu : public UMenuWidget
 {
@@ -14,7 +26,7 @@ class MPPLATFORMER_API UMainMenu : public UMenuWidget
 public:
 	UMainMenu(const FObjectInitializer& ObjectInitializer );
 
-	void SetServerList(TArray<FString> ServerNames);
+	void SetServerList(TArray<FServerData> ServerDataList);
 	void SelectIndex(uint32 Index);
 
 protected:

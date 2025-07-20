@@ -14,6 +14,12 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* ServerName;
 
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* UserName;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* NumPlayers;
+
 	void Setup(class UMainMenu* NewParent, uint32 NewIndex);
 
 	UPROPERTY(BlueprintReadOnly)

@@ -120,10 +120,15 @@ void UPuzzlePlatformsGameInstance::OnFindSessionsComplete(bool Succeeded)
 	if (SessionSearch.IsValid())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("FOUND %d Sessions!"), SessionSearch->SearchResults.Num());
-		TArray<FString> FoundSessionsList;
+		TArray<FServerData> FoundSessionsList;
 		for (const FOnlineSessionSearchResult& Result:SessionSearch->SearchResults)
 		{
-			FoundSessionsList.Add(*Result.GetSessionIdStr()); 
+			FServerData CurrentData;
+			CurrentData.ServerName = Result.GetSessionIdStr();
+			CurrentData.UserName = Result.Session.OwningUserName;
+			CurrentData.CurrentPlayers = Result.Session.NumOpenPublicConnections;
+			CurrentData.MaxPlayers = Result.Session.SessionSettings.NumPublicConnections;
+			FoundSessionsList.Add(CurrentData); 
 		}
 		Menu->SetServerList(FoundSessionsList);
 	}

@@ -39,15 +39,18 @@ bool UMainMenu::Initialize()
 }
 
 
-void UMainMenu::SetServerList(TArray<FString> ServerNames)
+void UMainMenu::SetServerList(TArray<FServerData> ServerDataList)
 {
 	ScrollBoxServerList->ClearChildren();
 
 	uint32 idx = 0;
-	for (const FString& ServerName : ServerNames)
+	for (const FServerData& ServerData : ServerDataList)
 	{
 		UServerRow* Row = CreateWidget<UServerRow>(this, ServerRowClass);
-		Row->ServerName->SetText(FText::FromString(ServerName));
+		Row->ServerName->SetText(FText::FromString(ServerData.ServerName));
+		Row->UserName->SetText(FText::FromString(ServerData.UserName));
+		FString NumPlayers = FString::Printf(TEXT("%d/%d"), ServerData.CurrentPlayers, ServerData.MaxPlayers);
+		Row->NumPlayers->SetText(FText::FromString(NumPlayers));
 		Row->Setup(this, idx);
 		++idx;
 		ScrollBoxServerList->AddChild(Row);
