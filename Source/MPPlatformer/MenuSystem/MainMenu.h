@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "MenuWidget.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/EditableText.h"
 
 #include "MainMenu.generated.h"
 
@@ -41,7 +42,13 @@ private:
 	UButton* BtnOpenJoinMenu;
 
 	UPROPERTY(meta = (BindWidget))
+	UButton* BtnOpenHostMenu;
+
+	UPROPERTY(meta = (BindWidget))
 	UButton* BtnBack;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* BtnBack_1;
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* BtnJoin;
@@ -57,7 +64,13 @@ private:
 	UWidget* JoinMenu;
 
 	UPROPERTY(meta = (BindWidget))
+	UWidget* HostMenu;
+
+	UPROPERTY(meta = (BindWidget))
 	UWidget* StartMenu;
+
+	UPROPERTY(meta = (BindWidget))
+	UEditableText* HostNameEditText;
 
 	UPROPERTY(meta = (BindWidget))
 	UPanelWidget* ScrollBoxServerList;
@@ -67,6 +80,9 @@ private:
 	TOptional<uint32> SelectedIndex;
 
 	// button functions 
+	UFUNCTION()
+	void BtnOpenHostMenuClicked();
+
 	UFUNCTION()
 	void BtnHostClicked();
 
@@ -81,6 +97,9 @@ private:
 
 	UFUNCTION()
 	void BtnQuitClicked();
+
+	
+	
 
 	void UpdateChildrenRows();
 };

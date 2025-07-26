@@ -20,6 +20,9 @@ bool UMainMenu::Initialize()
 	bool IsSuperInitialized = Super::Initialize();
 	if (!IsSuperInitialized) return false;
 
+	if(!ensure(BtnOpenHostMenu!=nullptr)) return false;
+	BtnOpenHostMenu->OnClicked.AddDynamic(this, &UMainMenu::UMainMenu::BtnOpenHostMenuClicked);
+
 	if(!ensure(BtnHost!=nullptr)) return false;
 	BtnHost->OnClicked.AddDynamic(this, &UMainMenu::BtnHostClicked);
 
@@ -28,6 +31,9 @@ bool UMainMenu::Initialize()
 
 	if(!ensure(BtnBack!=nullptr)) return false;
 	BtnBack->OnClicked.AddDynamic(this, &UMainMenu::BtnBackClicked);
+
+	if(!ensure(BtnBack_1!=nullptr)) return false;
+	BtnBack_1->OnClicked.AddDynamic(this, &UMainMenu::BtnBackClicked);
 	
 	if(!ensure(BtnJoin!=nullptr)) return false;
 	BtnJoin->OnClicked.AddDynamic(this, &UMainMenu::BtnJoinClicked);
@@ -80,13 +86,27 @@ void UMainMenu::UpdateChildrenRows()
 }
 
 
+void UMainMenu::BtnOpenHostMenuClicked()
+{
+	if(!ensure(MenuSwitcher!=nullptr)) return;
+	// can do it by index, but this is safer
+	if(!ensure(HostMenu!=nullptr)) return;
+	MenuSwitcher->SetActiveWidget(HostMenu);
+	// if(!ensure(MenuInterface!=nullptr)) return;
+	// MenuInterface->RefreshServerList();
+}
+
+
 void UMainMenu::BtnHostClicked()
 {
+	if(!ensure(HostNameEditText!=nullptr)) return;
+	
 	if(MenuInterface!=nullptr)
 	{
+		FString HostName = (HostNameEditText->GetText()).ToString();
 		// call out a method on the interface
-		// implementation is actually in gameinstance class
-		MenuInterface->Host();
+		// implementation is actually in GameInstance class
+		MenuInterface->Host(HostName);
 	}
 }
 

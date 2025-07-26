@@ -23,7 +23,7 @@ public:
 
 	// this is now an override function from the interface
 	UFUNCTION(Exec)
-	void Host() override;
+	void Host(FString ServerName) override;
 
 	UFUNCTION(Exec)
 	void Join(uint32 Index) override;
@@ -60,5 +60,5 @@ private:
 	void OnFindSessionsComplete(bool Succeeded);
 	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
-	void CreateSession();
+	void CreateSession(FString ServerName);
 };
