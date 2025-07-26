@@ -15,5 +15,5 @@ class MPPLATFORMER_API ALobbyGameMode : public AMPPlatformerGameMode
 	virtual void Logout(AController* Exiting) override;
 
 private:
-	uint8 NumberOfPlayers = 1;
+	uint8 NumberOfPlayers = 0;
 };
