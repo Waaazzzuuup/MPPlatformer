@@ -5,9 +5,9 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 	NumberOfPlayers++;
-	if (NumberOfPlayers >= 3)
+	if (NumberOfPlayers >= 2)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Got 3 ppl, cant wait to start!"))
+		UE_LOG(LogTemp, Warning, TEXT("Got 2 ppl, can't wait to start!"))
 	}
 }
 
