@@ -128,6 +128,17 @@ void UPuzzlePlatformsGameInstance::OnFindSessionsComplete(bool Succeeded)
 			CurrentData.UserName = Result.Session.OwningUserName;
 			CurrentData.MaxPlayers = Result.Session.SessionSettings.NumPublicConnections;
 			CurrentData.CurrentPlayers = CurrentData.MaxPlayers - Result.Session.NumOpenPublicConnections;
+			// get session settings
+			FString TestSettingText;
+			if(Result.Session.SessionSettings.Get(TEXT("TestSetting"), TestSettingText))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("TestSEtting Value IS %s"), *TestSettingText);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Cant get TestSetting value from SessionSettings"));
+			}
+			
 			FoundSessionsList.Add(CurrentData); 
 		}
 		Menu->SetServerList(FoundSessionsList);
@@ -191,6 +202,8 @@ void UPuzzlePlatformsGameInstance::CreateSession()
 		MySessionSettings.bUsesPresence = true;
 		MySessionSettings.bUseLobbiesIfAvailable = true;
 		MySessionSettings.bUseLobbiesVoiceChatIfAvailable = true;
+		MySessionSettings.Set(TEXT("TestSetting"), FString("Test"), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+		
 		// this is async, it calls a delegate when created; delegate binds in Init()
 		SessionInterface->CreateSession(0,SESSION_NAME, MySessionSettings);
 	}
