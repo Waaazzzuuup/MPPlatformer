@@ -60,5 +60,6 @@ private:
 	void OnFindSessionsComplete(bool Succeeded);
 	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
-	void CreateSession(FString ServerName);
+	FString DesiredServerName;
+	void CreateSession();
 };

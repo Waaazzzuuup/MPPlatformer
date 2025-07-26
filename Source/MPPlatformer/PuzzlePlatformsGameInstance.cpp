@@ -14,6 +14,7 @@
 #include "MenuSystem/GameMenu.h"
 
 const static FName SESSION_NAME = TEXT("MySessionGame");
+const static FName SERVER_NAME_SETTINGS_KEY = TEXT("CustomServerName");
 
 
 UPuzzlePlatformsGameInstance::UPuzzlePlatformsGameInstance(const FObjectInitializer& ObjectInitializer)
@@ -100,7 +101,7 @@ void UPuzzlePlatformsGameInstance::OnDestroySessionComplete(FName SessionName, b
 	UE_LOG(LogTemp, Warning, TEXT("Called OnDestroyComplete for %s"), *SessionName.ToString());
 	if (Succeeded)
 	{
-		CreateSession("AUTO_DESTROY_SESSION");
+		CreateSession();
 	}
 	else
 	{
@@ -124,13 +125,12 @@ void UPuzzlePlatformsGameInstance::OnFindSessionsComplete(bool Succeeded)
 		for (const FOnlineSessionSearchResult& Result:SessionSearch->SearchResults)
 		{
 			FServerData CurrentData;
-			CurrentData.ServerName = Result.GetSessionIdStr();
 			CurrentData.UserName = Result.Session.OwningUserName;
 			CurrentData.MaxPlayers = Result.Session.SessionSettings.NumPublicConnections;
 			CurrentData.CurrentPlayers = CurrentData.MaxPlayers - Result.Session.NumOpenPublicConnections;
 			// get session settings
 			FString ServerName;
-			if(Result.Session.SessionSettings.Get(TEXT("ServerName"), ServerName))
+			if(Result.Session.SessionSettings.Get(SERVER_NAME_SETTINGS_KEY, ServerName))
 			{
 				CurrentData.ServerName = ServerName;
 			}
@@ -180,7 +180,7 @@ void UPuzzlePlatformsGameInstance::OnJoinSessionComplete(FName SessionName,
 }
 
 
-void UPuzzlePlatformsGameInstance::CreateSession(FString ServerName)
+void UPuzzlePlatformsGameInstance::CreateSession()
 {
 	if(SessionInterface.IsValid())
 	{
@@ -202,7 +202,8 @@ void UPuzzlePlatformsGameInstance::CreateSession(FString ServerName)
 		MySessionSettings.bUsesPresence = true;
 		MySessionSettings.bUseLobbiesIfAvailable = true;
 		MySessionSettings.bUseLobbiesVoiceChatIfAvailable = true;
-		MySessionSettings.Set(TEXT("ServerName"), FString(ServerName), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+		MySessionSettings.Set(SERVER_NAME_SETTINGS_KEY, FString(DesiredServerName),
+			EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
 		
 		// this is async, it calls a delegate when created; delegate binds in Init()
 		SessionInterface->CreateSession(0,SESSION_NAME, MySessionSettings);
@@ -212,6 +213,8 @@ void UPuzzlePlatformsGameInstance::CreateSession(FString ServerName)
 // host now creates a session, and we already know the pointer to it (shared pointer)
 void UPuzzlePlatformsGameInstance::Host(FString ServerName)
 {
+	// refresh this in any case
+	DesiredServerName = ServerName;
 	if(SessionInterface.IsValid())
 	{
 		auto ExistingSession = SessionInterface->GetNamedSession(SESSION_NAME);
@@ -221,7 +224,7 @@ void UPuzzlePlatformsGameInstance::Host(FString ServerName)
 		}
 		else
 		{
-			CreateSession(ServerName);
+			CreateSession();
 		}
 	}
 }
