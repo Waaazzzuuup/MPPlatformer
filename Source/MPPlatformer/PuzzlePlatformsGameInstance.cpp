@@ -13,7 +13,11 @@
 #include "MenuSystem/MainMenu.h"
 #include "MenuSystem/GameMenu.h"
 
-const static FName SESSION_NAME = TEXT("GameSession");
+// ok so for order to update Session properties automatically u need to name ur session this way
+// it is HARDCODED in UnrealNames.h / .inl
+// u can maybe actually hardcode ur own name in these files (but why)
+// why does it pass other parameters BUT refuse to update these if it isnt "GameSession"? Why, UE? 
+const static FName SESSION_NAME = EName::GameSession; //TEXT("MyGameSession");
 const static FName SERVER_NAME_SETTINGS_KEY = TEXT("CustomServerName");
 
 
