@@ -17,10 +17,6 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 		bUseSeamlessTravel = true;
 		
 		World->ServerTravel("/Game/PuzzlePlatforms/Maps/ThirdPersonMap?listen");
-		for (int i=0; i<9999; i++)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("%d"), i);
-		}
 	}
 }
 
