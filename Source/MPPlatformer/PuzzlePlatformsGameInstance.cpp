@@ -71,6 +71,11 @@ void UPuzzlePlatformsGameInstance::Init()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("ERROR: No OSS found"));
 	}
+	// UE 5.4 automatically handles this, but here we are
+	if(GEngine!= nullptr)
+	{
+		GEngine->OnNetworkFailure().AddUObject(this, &UPuzzlePlatformsGameInstance::OnNetworkFailure);
+	}
 }
 
 // this declaration must match a delegate of after-session-creation func 
@@ -183,6 +188,13 @@ void UPuzzlePlatformsGameInstance::OnJoinSessionComplete(FName SessionName,
 	PlayerController->ClientTravel(ConnectString, TRAVEL_Absolute);
 }
 
+
+void UPuzzlePlatformsGameInstance::OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type Type,
+	const FString& string)
+{
+	UE_LOG(LogTemp, Warning, TEXT("OnNetworkFailureCalled"));
+	ReturnToMainMenu();
+}
 
 void UPuzzlePlatformsGameInstance::CreateSession()
 {

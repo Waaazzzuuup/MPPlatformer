@@ -62,6 +62,8 @@ private:
 	void OnDestroySessionComplete(FName SessionName, bool Succeeded);
 	void OnFindSessionsComplete(bool Succeeded);
 	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
+	// not strictly needed in UE 5.4
+	void OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type Type, const FString& string);
 
 	FString DesiredServerName;
 	void CreateSession();
