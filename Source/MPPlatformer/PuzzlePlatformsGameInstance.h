@@ -29,6 +29,9 @@ public:
 	void Join(uint32 Index) override;
 
 	UFUNCTION(Exec)
+	void StartSession();
+
+	UFUNCTION(Exec)
 	void ReturnToMainMenu() override;
 
 	UFUNCTION(Exec)

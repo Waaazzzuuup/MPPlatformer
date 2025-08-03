@@ -14,6 +14,9 @@ class MPPLATFORMER_API ALobbyGameMode : public AMPPlatformerGameMode
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 	virtual void Logout(AController* Exiting) override;
 
+	FTimerHandle StartGameTimer;
+
 private:
 	uint8 NumberOfPlayers = 0;
+	void StartGame();
 };

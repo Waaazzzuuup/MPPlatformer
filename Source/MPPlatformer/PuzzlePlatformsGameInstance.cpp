@@ -13,10 +13,10 @@
 #include "MenuSystem/MainMenu.h"
 #include "MenuSystem/GameMenu.h"
 
-// ok so for order to update Session properties automatically u need to name ur session this way
+// ok, so in order to update Session properties (NumOPenPublicConnections) automatically u need to name ur session this way
 // it is HARDCODED in UnrealNames.h / .inl
 // u can maybe actually hardcode ur own name in these files (but why)
-// why does it pass other parameters BUT refuse to update these if it isnt "GameSession"? Why, UE? 
+// why does it pass other parameters BUT refuse to update these if it isn't "GameSession"? Why, UE? 
 const static FName SESSION_NAME = EName::GameSession; //TEXT("MyGameSession");
 const static FName SERVER_NAME_SETTINGS_KEY = TEXT("CustomServerName");
 
@@ -244,6 +244,16 @@ void UPuzzlePlatformsGameInstance::Join(uint32 Index)
 
 	bool IsJoined = SessionInterface->JoinSession(0,SESSION_NAME, SessionSearch->SearchResults[Index]);
 	if(!IsJoined) UE_LOG(LogTemp, Warning, TEXT("ERROR: SessionInterface->JoinSession cant join"))
+}
+
+
+void UPuzzlePlatformsGameInstance::StartSession()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Session is starting, no more players allowed."))
+	if(SessionInterface.IsValid())
+	{
+		SessionInterface->StartSession(SESSION_NAME);
+	}
 }
 
 
